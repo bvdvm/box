@@ -1,16 +1,15 @@
 # Cześć, Przyniosłem Tobie Kwiaty — Box (strona prezentacyjna)
 
-Statyczna strona prezentująca dedykację i tracklistę albumu na stronie głównej, z
-osobną (nie eksponowaną od razu) podstroną z zawartością boxu (2× tee, brelok NFC,
-puzzle, magnes), oraz przekierowaniem do odtwarzacza:
+Jednostronicowa strona w formie prowadzonej sekwencji "slajdów" (ekran ładowania →
+logo → dedykacja → "otwórz box" → zawartość zestawu → okładka i tracklista),
+nawigowana przyciskami Wstecz / Dalej, z finalnym przekierowaniem do odtwarzacza:
 https://bvdvm.github.io/badamify/
 
 ## Struktura
 
 ```
 .
-├── index.html      ← strona główna: logo, dedykacja, okładka + tracklista
-├── box.html        ← podstrona: zawartość zestawu (link w nawigacji "Zestaw")
+├── index.html
 └── assets/
     └── img/
         ├── logo-pink.webp
@@ -23,43 +22,42 @@ https://bvdvm.github.io/badamify/
         └── magnet.webp
 ```
 
-`box.html` nie jest linkowany na pierwszy rzut oka ze strony głównej — dostęp do niego
-jest tylko przez link „Zestaw" w górnym menu, żeby zawartość zestawu nie była
-pierwszą rzeczą, jaką widać po wejściu na stronę.
+Brak zależności, brak build stepu — czysty HTML/CSS/JS. Jedyne zasoby zewnętrzne to
+fonty z Google Fonts (Inter, JetBrains Mono).
 
-Brak zależności, brak build stepu — to czysty HTML/CSS/JS. Jedyne zasoby zewnętrzne to
-fonty z Google Fonts (Inter, JetBrains Mono), wczytywane przez `<link>` w `<head>`.
+## Kolejność slajdów (w `index.html`, sekcje `.slide`)
+
+1. Logo + slogan
+2. Dedykacja (stylizowana jako list)
+3. "TERAZ OTWÓRZ BOX"
+4. Zawartość zestawu z opisami
+5. Okładka + tracklista (bez czasów trwania) — tu przycisk zmienia się na „Słuchaj teraz"
+
+Nawigacja Wstecz/Dalej to stały pasek na dole ekranu (`.controls`), widoczny na
+każdym slajdzie. Kliknięcie w małe logo w lewym górnym rogu wraca na slajd 1.
 
 ## Wrzucenie na GitHub Pages
-
-**Opcja A — nowe, osobne repo (np. `kwiaty-box`):**
 
 ```bash
 cd package
 git init
 git add .
-git commit -m "Strona prezentacyjna boxu — Cześć, Przyniosłem Tobie Kwiaty"
+git commit -m "Strona prezentacyjna — Cześć, Przyniosłem Tobie Kwiaty"
 git branch -M main
 git remote add origin https://github.com/bvdvm/kwiaty-box.git
 git push -u origin main
 ```
 
-Potem w ustawieniach repo: **Settings → Pages → Branch: main / (root)** i zapisz.
-Strona pojawi się pod `https://bvdvm.github.io/kwiaty-box/`.
-
-**Opcja B — jako podfolder w istniejącym repo `badamify`:**
-
-Skopiuj zawartość tego folderu (`index.html` + `assets/`) do np. `badamify/box/`
-w swoim repo i wypchnij zmiany — strona będzie dostępna pod
-`https://bvdvm.github.io/badamify/box/`.
+Potem: **Settings → Pages → Branch: main / (root)**. Strona pojawi się pod
+`https://bvdvm.github.io/kwiaty-box/` (lub jako podfolder w repo `badamify`, jeśli
+wolisz trzymać ją razem z odtwarzaczem).
 
 ## Co ewentualnie podmienić
 
-- Link do odtwarzacza (`https://bvdvm.github.io/badamify/`) występuje w obu plikach
-  — szukaj `href="https://bvdvm.github.io/badamify/"`.
-- Dedykacja i tracklista są w `index.html` (sekcje `.hero-dedication` i `#utwory`).
-- Zawartość zestawu i opisy produktów są w `box.html` (sekcje `#zestaw` i `#szczegoly`)
-  — edytuj tekst bezpośrednio w znacznikach.
-- Obrazki w `assets/img/` to skompresowane .webp (autocrop + downscale z oryginałów)
-  — jeśli chcesz podmienić którykolwiek produkt, zachowaj tę samą nazwę pliku albo
-  zaktualizuj odpowiedni atrybut `src`.
+- Link do odtwarzacza (`https://bvdvm.github.io/badamify/`) — szukaj
+  `href="https://bvdvm.github.io/badamify/"`.
+- Treść każdego slajdu jest w osobnej sekcji `<section class="slide" data-slide="N">`
+  w `index.html` — edytuj bezpośrednio w znacznikach.
+- Kolejność/liczbę slajdów można zmienić dodając/usuwając sekcje `.slide` — reszta
+  (licznik kroków, stan przycisku Wstecz, zamiana Dalej→Słuchaj teraz na ostatnim
+  slajdzie) liczy się automatycznie w skrypcie na dole pliku.
